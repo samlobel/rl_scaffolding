@@ -1,0 +1,2 @@
+learning_rate,0.001,float
+max_buffer_size,500000,integer
