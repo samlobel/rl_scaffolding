@@ -42,8 +42,8 @@ if __name__ == "__main__":
     hyperparams_dir = utils.create_log_dir(
         os.path.join(full_experiment_name, "hyperparams"))
 
-    params = utils.get_hyper_parameters(
-        args.hyper_parameter_name, args.hyper_param_directory)
+    params = utils.get_hyper_parameters(args.hyper_parameter_name,
+                                        args.hyper_param_directory)
 
     params['hyper_parameters_name'] = args.hyper_parameter_name
 

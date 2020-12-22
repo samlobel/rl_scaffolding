@@ -2,6 +2,7 @@ import os
 import sys
 from collections import defaultdict
 
+
 def create_log_dir(experiment_name):
     path = os.path.join(os.getcwd(), experiment_name)
     try:
@@ -12,10 +13,12 @@ def create_log_dir(experiment_name):
         print("Successfully created the directory %s " % path)
     return path
 
+
 def remove_prefix(text, prefix):
     if text.startswith(prefix):
         return text[len(prefix):]
     return text
+
 
 def boolify(s):
     if s == 'True':
@@ -23,6 +26,7 @@ def boolify(s):
     if s == 'False':
         return False
     raise ValueError("String '{}' is not a known bool value.".format(s))
+
 
 def autoconvert(s):
     for fn in (boolify, int, float):
@@ -32,9 +36,12 @@ def autoconvert(s):
             pass
     return s
 
+
 def update_param(params, arg_name, arg_value):
     if arg_name not in params:
-        raise KeyError("Parameter '{}' specified, but not found in hyperparams file.".format(arg_name))
+        raise KeyError(
+            "Parameter '{}' specified, but not found in hyperparams file.".
+            format(arg_name))
     else:
         print("Updating parameter '{}' to {}".format(arg_name, arg_value))
     converted_arg_value = autoconvert(arg_value)
@@ -43,24 +50,25 @@ def update_param(params, arg_name, arg_value):
         raise ValueError(error_str)
     params[arg_name] = converted_arg_value
 
-def get_hyper_parameters(name,hyper_param_directory):
-    meta_params={}
+
+def get_hyper_parameters(name, hyper_param_directory):
+    meta_params = {}
     # THIS_DIR = os.path.dirname(os.path.abspath(__file__))
     filepath = os.path.join(hyper_param_directory, f"{name}.hyper")
     # filepath = os.path.join(THIS_DIR, alg + "_hyper_parameters",
-                            # name + ".hyper")
+    # name + ".hyper")
     with open(filepath) as f:
         lines = [line.rstrip('\n') for line in f]
         for l in lines:
-            parameter_name,parameter_value,parameter_type=(l.split(','))
-            if parameter_type=='string':
-                meta_params[parameter_name]=str(parameter_value)
-            elif parameter_type=='integer':
-                meta_params[parameter_name]=int(parameter_value)
-            elif parameter_type=='float':
-                meta_params[parameter_name]=float(parameter_value)
-            elif parameter_type=='boolean':
-                meta_params[parameter_name]=boolify(parameter_value)
+            parameter_name, parameter_value, parameter_type = (l.split(','))
+            if parameter_type == 'string':
+                meta_params[parameter_name] = str(parameter_value)
+            elif parameter_type == 'integer':
+                meta_params[parameter_name] = int(parameter_value)
+            elif parameter_type == 'float':
+                meta_params[parameter_name] = float(parameter_value)
+            elif parameter_type == 'boolean':
+                meta_params[parameter_name] = boolify(parameter_value)
             else:
                 print("unknown parameter type ... aborting")
                 print(l)
@@ -76,7 +84,8 @@ def save_hyper_parameters(params, seed):
         params['hyper_parameters_name'],
         seed,
     )
-    hyperparams_path = os.path.join(params['hyperparams_dir'], hyperparams_filename)
+    hyperparams_path = os.path.join(params['hyperparams_dir'],
+                                    hyperparams_filename)
     with open(hyperparams_path, 'w') as file:
         for name, value in sorted(params.items()):
             type_str = defaultdict(lambda: None, {
@@ -87,5 +96,3 @@ def save_hyper_parameters(params, seed):
             })[type(value)] # yapf: disable
             if type_str is not None:
                 file.write("{},{},{}\n".format(name, value, type_str))
-
-
