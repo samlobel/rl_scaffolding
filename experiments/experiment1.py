@@ -4,8 +4,10 @@ This is the first experiment
 
 import argparse
 import os
+import datetime
 
-from package import utils
+from common import utils
+from common.logging_utils import MetaLogger
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -50,6 +52,8 @@ if __name__ == "__main__":
     for arg_name, arg_value in other_args:
         utils.update_param(params, arg_name, arg_value)
     params['hyperparams_dir'] = hyperparams_dir
+    params['start_time'] = str(datetime.datetime.now())
+    params['seed'] = args.seed
 
     utils.save_hyper_parameters(params, args.seed)
 
